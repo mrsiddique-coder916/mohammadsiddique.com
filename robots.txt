@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mohammadsiddique.com/sitemap.xml
+Sitemap: https://developsacramento.com/sitemap.xml
