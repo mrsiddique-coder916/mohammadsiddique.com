@@ -1,4 +1,4 @@
-// Asset Bridge Realty — shared site behavior
+// mohammadsiddique.com — shared site behavior
 document.addEventListener('DOMContentLoaded', function () {
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.querySelector('.main-nav');
