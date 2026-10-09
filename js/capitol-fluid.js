@@ -24,14 +24,14 @@
     'float segDist(vec2 p, vec2 a, vec2 b){ vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0., 1.); return length(pa - ba * h); }',
     'void main(){',
     '  vec2 q = uv * vec2(aspect, 1.);',
-    '  vec2 v = vec2(sin(q.y * 6.0 + t * .35) + sin(q.x * 3.1 + q.y * 4.2 - t * .21),',
-    '                cos(q.x * 5.5 - t * .30) + cos(q.y * 2.7 - q.x * 3.9 + t * .26));',
-    '  vec2 src = uv - v * vec2(.0015 / aspect, .0015);',
+    '  vec2 v = vec2(sin(q.y * 6.0 + t * 1.4) + sin(q.x * 3.1 + q.y * 4.2 - t * .84),',
+    '                cos(q.x * 5.5 - t * 1.2) + cos(q.y * 2.7 - q.x * 3.9 + t * 1.04));',
+    '  vec2 src = uv - v * vec2(.0026 / aspect, .0026);',
     '  float d = texture2D(dye, src).r;',
     '  float n = texture2D(dye, src + vec2(px.x, 0.)).r + texture2D(dye, src - vec2(px.x, 0.)).r',
     '          + texture2D(dye, src + vec2(0., px.y)).r + texture2D(dye, src - vec2(0., px.y)).r;',
     '  d = mix(d, n * .25, .22);',
-    '  d = max(0., d - .0034);',
+    '  d = max(0., d - .0024);',
     '  float sd = segDist(q, seg.xy * vec2(aspect, 1.), seg.zw * vec2(aspect, 1.));',
     '  d += segRS.y * exp(-(sd * sd) / (segRS.x * segRS.x));',
     '  for (int i = 0; i < 3; i++) {',
@@ -169,10 +169,11 @@
     resize();
 
     // three drifting sources keep the photos moving when nobody is touching the page
+    var bt = t * 4; // drift speed
     var blobs = [
-      .50 + .30 * Math.sin(t * .23),        .26 + .13 * Math.sin(t * .31 + 1.2), .125, .026,
-      .50 + .34 * Math.sin(t * .17 + 2.1),  .24 + .12 * Math.cos(t * .27),       .110, .024,
-      .50 + .06 * Math.sin(t * .29 + 4.0),  .56 + .22 * Math.sin(t * .19 + .7),  .075, .022
+      .50 + .30 * Math.sin(bt * .23),        .26 + .13 * Math.sin(bt * .31 + 1.2), .21, .034,
+      .50 + .34 * Math.sin(bt * .17 + 2.1),  .24 + .12 * Math.cos(bt * .27),       .19, .032,
+      .50 + .06 * Math.sin(bt * .29 + 4.0),  .56 + .22 * Math.sin(bt * .19 + .7),  .12, .030
     ];
     var active = now - ptr.lastMove < 120;
     var dx = ptr.x - ptr.px, dy = ptr.y - ptr.py;
@@ -188,7 +189,7 @@
     gl.uniform1f(sim.u.t, t);
     gl.uniform1f(sim.u.aspect, ASPECT);
     gl.uniform4f(sim.u.seg, ptr.px, ptr.py, ptr.x, ptr.y);
-    gl.uniform2f(sim.u.segRS, .12, active ? .07 + .2 * speed : 0);
+    gl.uniform2f(sim.u.segRS, .2, active ? .09 + .22 * speed : 0);
     gl.uniform4fv(sim.u.blobs, new Float32Array(blobs));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     var tmp = read; read = write; write = tmp;
